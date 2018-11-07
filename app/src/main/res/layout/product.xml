@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/list_product_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:text="@string/name"
             android:textAlignment="center"
             android:textSize="18sp" />
@@ -25,7 +25,7 @@
         <TextView
             android:id="@+id/list_product_expiation_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:text="@string/expiration_date"
             android:textAlignment="center"
             android:textSize="18sp" />
@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/list_product_left"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:text="@string/left"
             android:textAlignment="center"
             android:textSize="18sp" />
@@ -52,7 +52,7 @@
         <TextView
             android:id="@+id/list_product_amount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:text="@string/amount"
             android:textAlignment="center"
             android:textSize="18sp" />
