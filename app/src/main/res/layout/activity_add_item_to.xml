@@ -7,7 +7,7 @@
     tools:context=".AddItemTo">
 
     <EditText
-        android:id="@+id/name_item"
+        android:id="@+id/add_item_to_db_name"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
@@ -15,22 +15,27 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/name"
         android:textAlignment="center"
+        android:background="@null"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/comment_item"
+        android:id="@+id/add_item_to_db_comment"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:background="@null"
         android:hint="@string/comment"
+        android:singleLine="true"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_item" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <Button
         android:id="@+id/add_item_to_db_button"
@@ -41,5 +46,34 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="196dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_item_to_db_name">
+
+        <RadioButton
+            android:id="@+id/fridge_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:text="@string/tab_text_1"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/shelf_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:text="@string/tab_text_2"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+    </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>

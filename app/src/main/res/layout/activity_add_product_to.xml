@@ -7,16 +7,17 @@
     tools:context=".AddProductTo">
 
     <EditText
-        android:id="@+id/name_product"
+        android:id="@+id/add_product_to_db_name"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:gravity="bottom"
-        android:hint="@string/product_name"
+        android:hint="@string/name"
         android:inputType="text"
         android:textAlignment="center"
+        android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="256dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="8"
         android:alignmentMode="alignMargins"
@@ -33,7 +35,7 @@
         android:rowCount="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_product">
+        app:layout_constraintTop_toBottomOf="@+id/add_product_to_db_name">
 
         <!-- 1.1 -->
         <android.support.v7.widget.CardView
@@ -77,15 +79,17 @@
                 android:gravity="center">
 
                 <EditText
-                    android:id="@+id/calendar"
+                    android:id="@+id/add_product_to_db_calendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:hint="DD-MM-YYYY"
                     android:inputType="text"
+                    android:selectAllOnFocus="false"
                     android:textAlignment="center" />
 
             </LinearLayout>
@@ -131,12 +135,14 @@
                 android:gravity="center">
 
                 <EditText
-                    android:id="@+id/product_amount"
+                    android:id="@+id/add_product_to_db_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:gravity="center_vertical|center_horizontal|center"
                     android:hint="1000"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
 
             </LinearLayout>
 
