@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 
-    private SparseBooleanArray mSelectedItemsIds;
+    private SparseBooleanArray selectedItemsIds;
     private ArrayList<Item> itemList;
     private Context context;
 
@@ -28,7 +28,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         super(context, R.layout.item, itemList);
         this.itemList = itemList;
         this.context = context;
-        mSelectedItemsIds = new SparseBooleanArray();
+        selectedItemsIds = new SparseBooleanArray();
     }
 
     private class ViewHolder {
@@ -43,9 +43,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         if(view == null) {
             holder = new ItemAdapter.ViewHolder();
             view = View.inflate(context, R.layout.item, null);
+
             holder.name = view.findViewById(R.id.list_item_name);
             holder.place = view.findViewById(R.id.list_item_place);
             holder.comment = view.findViewById(R.id.list_item_comment);
+
             view.setTag(holder);
         }
         else holder = (ItemAdapter.ViewHolder) view.getTag();
@@ -63,30 +65,28 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     }
 
     public void toggleSelection(int position) {
-        selectView(position, !mSelectedItemsIds.get(position));
+        selectView(position, !selectedItemsIds.get(position));
     }
 
     public void removeSelection() {
-        mSelectedItemsIds = new SparseBooleanArray();
+        selectedItemsIds = new SparseBooleanArray();
         notifyDataSetChanged();
     }
 
     public void selectView(int position, boolean value) {
-        if (value)
-            mSelectedItemsIds.put(position, value);
-        else
-            mSelectedItemsIds.delete(position);
+        if (value) selectedItemsIds.put(position, value);
+        else selectedItemsIds.delete(position);
         notifyDataSetChanged();
     }
 
     public int getSelectedCount() {
 
-        return mSelectedItemsIds.size();
+        return selectedItemsIds.size();
     }
 
     public SparseBooleanArray getSelectedIds() {
 
-        return mSelectedItemsIds;
+        return selectedItemsIds;
     }
 
     @Override

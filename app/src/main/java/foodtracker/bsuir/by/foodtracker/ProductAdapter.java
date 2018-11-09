@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ProductAdapter extends ArrayAdapter<Product> {
 
-    private SparseBooleanArray mSelectedItemsIds;
+    private SparseBooleanArray selectedItemsIds;
     private ArrayList<Product> productList;
     private Context context;
 
@@ -23,7 +23,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         super(context, R.layout.product, productList);
         this.productList = productList;
         this.context = context;
-        mSelectedItemsIds = new SparseBooleanArray();
+        selectedItemsIds = new SparseBooleanArray();
     }
 
     private class ViewHolder {
@@ -39,10 +39,12 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         if(view == null) {
             holder = new ViewHolder();
             view = View.inflate(context, R.layout.product, null);
+
             holder.name = view.findViewById(R.id.list_product_name);
             holder.expirationDate = view.findViewById(R.id.list_product_expiation_date);
             holder.amount = view.findViewById(R.id.list_product_amount);
             //holder.photo = view.findViewById(R.id.product_photo);
+
             view.setTag(holder);
         }
         else holder = (ViewHolder) view.getTag();
@@ -65,28 +67,26 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
 
     public void toggleSelection(int position) {
-        selectView(position, !mSelectedItemsIds.get(position));
+        selectView(position, !selectedItemsIds.get(position));
     }
 
     public void removeSelection() {
-        mSelectedItemsIds = new SparseBooleanArray();
+        selectedItemsIds = new SparseBooleanArray();
         notifyDataSetChanged();
     }
 
     public void selectView(int position, boolean value) {
-        if (value)
-            mSelectedItemsIds.put(position, value);
-        else
-            mSelectedItemsIds.delete(position);
+        if (value) selectedItemsIds.put(position, value);
+        else selectedItemsIds.delete(position);
         notifyDataSetChanged();
     }
 
     public int getSelectedCount() {
-        return mSelectedItemsIds.size();
+        return selectedItemsIds.size();
     }
 
     public SparseBooleanArray getSelectedIds() {
-        return mSelectedItemsIds;
+        return selectedItemsIds;
     }
 
 }

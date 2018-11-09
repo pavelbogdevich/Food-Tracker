@@ -37,12 +37,10 @@ public class AddProductTo extends AppCompatActivity {
     private Button mAddButton;
     private ImageView mPhotoButton;
 
-    private int id;
-
     private int year;
     private int month;
     private int date;
-    private int amount;
+    private int amount = 0;
     private String name;
     private String expiration_date;
     private String address;
@@ -61,12 +59,16 @@ public class AddProductTo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("Add  product on create");
         setContentView(R.layout.activity_add_product_to);
 
+        name = new String();
+        expiration_date = new String();
+        db = new DBProduct(this);
+
         String value = getIntent().getStringExtra(DBProduct.PLACE);
-        if(value.length() == 1) place = value;
-        else {
+        if(value.length() == 1) {
+            place = value;
+        } else {
             place = String.valueOf(value.charAt(0));
             name = value.substring(1);
         }
@@ -74,15 +76,15 @@ public class AddProductTo extends AppCompatActivity {
         mEditTextName = findViewById(R.id.add_product_to_db_name);
         mEditTextName.setText(name);
         mEditTextAmount = findViewById(R.id.add_product_to_db_amount);
-        db = new DBProduct(this);
-
+        mEditTextDate = findViewById(R.id.add_product_to_db_calendar);
+        mAddButton = findViewById(R.id.add_product_to_db_button);
+        mPhotoButton = findViewById(R.id.photo_button);
         setupExpirationDate();
         setupAddButton();
         setupPhotoButton();
     }
 
     private void setupExpirationDate() {
-        mEditTextDate = findViewById(R.id.add_product_to_db_calendar);
         mEditTextDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +92,6 @@ public class AddProductTo extends AppCompatActivity {
                 year = mExpirationDate.get(Calendar.YEAR);
                 month = mExpirationDate.get(Calendar.MONTH);
                 date = mExpirationDate.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog mDatePickerDialog = new DatePickerDialog(AddProductTo.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -104,12 +105,12 @@ public class AddProductTo extends AppCompatActivity {
     }
 
     private void setupAddButton() {
-        mAddButton = findViewById(R.id.add_product_to_db_button);
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 name = mEditTextName.getText().toString();
-                amount = Integer.parseInt(mEditTextAmount.getText().toString());
+                String amountString = new String(mEditTextAmount.getText().toString());
+                amount = amountString.isEmpty() ? 0 : Integer.parseInt(amountString);
                 expiration_date = mEditTextDate.getText().toString();
                 if(!expiration_date.isEmpty() && amount != 0 && !name.isEmpty()) {
                     //String path = new String(address.isEmpty() ? "" : ", " + DBProduct.PHOTO_PATH);
@@ -124,7 +125,6 @@ public class AddProductTo extends AppCompatActivity {
     }
 
     private void setupPhotoButton() {
-        mPhotoButton = findViewById(R.id.photo_button);
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,32 +211,27 @@ public class AddProductTo extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("Add product on start");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("Add  product on resume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("Add  product on pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        System.out.println("Add  product on stop");
         db.close();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("Add  product on destroy");
     }
 
 }

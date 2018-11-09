@@ -20,36 +20,42 @@ import android.view.MenuItem;
 public class ProductManageActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
-    private NavigationView navigationView;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private NavigationView mNavigationView;
     private ViewPager mViewPager;
+
+    private ActionBarDrawerToggle toggle;
+    private SectionsPagerAdapter sectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        TabLayout tabLayout = findViewById(R.id.tabs);
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(mToggle);
-        mToggle.syncState();
+        mToolbar = findViewById(R.id.toolbar);
+        mViewPager = findViewById(R.id.container);
+        mTabLayout = findViewById(R.id.tabs);
+        mNavigationView = findViewById(R.id.nav_view);
+
+        toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(sectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mViewPager = findViewById(R.id.container);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        setupNavigationView();
+    }
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+    private void setupNavigationView() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
@@ -72,7 +78,7 @@ public class ProductManageActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mToggle.onOptionsItemSelected(item)) return true;
+        if (toggle.onOptionsItemSelected(item)) return true;
         if (item.getItemId() == R.id.delete) return true;
         if (item.getItemId() == R.id.add) return true;
         return super.onOptionsItemSelected(item);
@@ -96,7 +102,6 @@ public class ProductManageActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             switch (position) {
                 case 0:
                     return new Fridge();

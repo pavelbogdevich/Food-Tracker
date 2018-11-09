@@ -14,7 +14,6 @@ public class DBItem extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "items_db";
     public static final String TABLE_ITEMS = "items";
-
     public static final String ID = "_id";
     public static final String NAME = "name";
     public static final String PLACE = "place";

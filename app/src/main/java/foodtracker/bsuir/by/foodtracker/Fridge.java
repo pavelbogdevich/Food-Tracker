@@ -25,35 +25,27 @@ public class Fridge extends Fragment{
     private ListView mListView;
     private Button mAddButton;
 
-    private ArrayList<Product> mProductList;
-    private ProductAdapter mProductAdapter;
+    private ArrayList<Product> productList;
+    private ProductAdapter productAdapter;
     private DBProduct db;
 
     public static final String FRIDGE = "1";
     private static final String SELECTED = "Выбрано";
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab_fridge, container, false);
-        System.out.println("Fridge on create");
 
-        mProductList = new ArrayList<>();
-        mProductAdapter = new ProductAdapter(mProductList, getContext());
+        productList = new ArrayList<>();
+        productAdapter = new ProductAdapter(productList, getContext());
 
         mListView = rootView.findViewById(R.id.list_fridge);
+        mAddButton = rootView.findViewById(R.id.add_product_from_fridge_button);
+
         setupShortListViewClick();
         setupLongListViewClick();
+        setupAddButton();
 
-        mAddButton = rootView.findViewById(R.id.add_product_from_fridge_button);
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddProductTo.class);
-                intent.putExtra(DBProduct.PLACE, FRIDGE);
-                startActivity(intent);
-            }
-        });
         return rootView;
     }
 
@@ -61,9 +53,8 @@ public class Fridge extends Fragment{
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(position + " " + id);
                 Intent intent = new Intent(getContext(), EditProduct.class);
-                intent.putExtra(DBProduct.ID, String.valueOf(mProductList.get(position).getId()));
+                intent.putExtra(DBProduct.ID, String.valueOf(productList.get(position).getId()));
                 startActivity(intent);
             }
         });
@@ -76,20 +67,18 @@ public class Fridge extends Fragment{
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 int checkedCount = mListView.getCheckedItemCount();
                 mode.setTitle(checkedCount + " " + SELECTED);
-                mProductAdapter.toggleSelection(position);
+                productAdapter.toggleSelection(position);
                 mListView.getChildAt(position).setBackgroundColor(checked ? Color.parseColor("#00a577") : Color.WHITE);
             }
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                System.out.println("create");
                 mode.getMenuInflater().inflate(R.menu.menu_toolbar, menu);
                 return true;
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                System.out.println("prepare");
                 menu.findItem(R.id.delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 menu.findItem(R.id.add).setVisible(false);
                 return true;
@@ -97,16 +86,15 @@ public class Fridge extends Fragment{
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                System.out.println("clicked");
                 switch (item.getItemId()) {
                     case R.id.delete:
-                        SparseBooleanArray selected = mProductAdapter.getSelectedIds();
+                        SparseBooleanArray selected = productAdapter.getSelectedIds();
                         SQLiteDatabase database = db.getWritableDatabase();
                         for(int i = selected.size() - 1; i >= 0; i--) {
                             if(selected.valueAt(i)) {
-                                Product selectedProduct = mProductAdapter.getItem(selected.keyAt(i));
+                                Product selectedProduct = productAdapter.getItem(selected.keyAt(i));
                                 db.deleteProduct(database, selectedProduct.getId());
-                                mProductAdapter.remove(selectedProduct);
+                                productAdapter.remove(selectedProduct);
                             }
                         }
                         mode.finish();
@@ -116,16 +104,25 @@ public class Fridge extends Fragment{
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                System.out.println("destroy");
-                mProductAdapter.removeSelection();
-                for(int i = 0; i < mProductList.size(); i++)
+                productAdapter.removeSelection();
+                for(int i = 0; i < productList.size(); i++)
                     mListView.getChildAt(i).setBackgroundColor(Color.WHITE);
             }
         });
     }
 
+    private void setupAddButton() {
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AddProductTo.class);
+                intent.putExtra(DBProduct.PLACE, FRIDGE);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void updateProducts() {
-        System.out.println("In update");
         SQLiteDatabase database = db.getWritableDatabase();
         String query = String.format(
                 "select PR.%s, PR.%s, PR.%s, AM.%s, AM.%s, PR.%s from %s as PR inner join %s as AM on PR.%s = AM.%s where PR.%s = '%s'",
@@ -143,7 +140,7 @@ public class Fridge extends Fragment{
             if(cursor.moveToFirst()) {
                 String [] values = cursor.getColumnNames();
                 do {
-                    mProductList.add(new Product(
+                    productList.add(new Product(
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex(values[0]))),
                             cursor.getString(cursor.getColumnIndex(values[1])),
                             cursor.getString(cursor.getColumnIndex(values[2])),
@@ -152,7 +149,7 @@ public class Fridge extends Fragment{
                             cursor.getString(cursor.getColumnIndex(values[5])))
                     );
                 } while(cursor.moveToNext());
-                mListView.setAdapter(mProductAdapter);
+                mListView.setAdapter(productAdapter);
             }
             else return;
     }
@@ -160,7 +157,6 @@ public class Fridge extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("Fridge on start");
         db = new DBProduct(getActivity());
         updateProducts();
     }
@@ -168,33 +164,28 @@ public class Fridge extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("Fridge on resume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("Fridge on pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        System.out.println("Fridge on stop");
         db.close();
-        mProductList.clear();
-        mProductAdapter.notifyDataSetChanged();
+        productList.clear();
+        productAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        System.out.println("Fridge on destroy view");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("Fridge on destroy");
     }
 }

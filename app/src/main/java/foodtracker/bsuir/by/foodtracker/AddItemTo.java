@@ -19,7 +19,6 @@ public class AddItemTo extends AppCompatActivity {
     private EditText mEditTextComment;
     private Button mAddItemButton;
 
-    private int id;
     private String name;
     private String comment;
     private DBItem db;
@@ -38,6 +37,10 @@ public class AddItemTo extends AppCompatActivity {
         mRadioGroup = findViewById(R.id.radioGroup);
         mEditTextComment = findViewById(R.id.add_item_to_db_comment);
         mAddItemButton = findViewById(R.id.add_item_to_db_button);
+        setupAddButton();
+    }
+
+    private void setupAddButton() {
         mAddItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +59,6 @@ public class AddItemTo extends AppCompatActivity {
                 else imageError();
             }
         });
-
     }
 
     private void imageError() {
@@ -75,32 +77,26 @@ public class AddItemTo extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("Add item on start");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("Add item on resume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("Add item on pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        System.out.println("Add item on stop");
         db.close();
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("Add item on destroy");
     }
 }

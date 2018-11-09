@@ -19,7 +19,7 @@ public class EditProduct extends AppCompatActivity {
     private ImageView mImageViewPhoto;
     private Button mOkButton;
 
-    private int productId;
+    private int id;
     private DBProduct db;
 
     @Override
@@ -27,42 +27,27 @@ public class EditProduct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_product);
 
-        productId = Integer.parseInt(getIntent().getStringExtra(DBProduct.ID));
-        System.out.println("PRODUCTID - " + productId);
+        id = Integer.parseInt(getIntent().getStringExtra(DBProduct.ID));
         db = new DBProduct(this);
 
         mEditTextCurrentAmount = findViewById(R.id.current_product_edit);
         mTextViewName = findViewById(R.id.name_product_edit);
         mTextViewStartAmount = findViewById(R.id.start_product_edit);
         mTextViewLeft = findViewById(R.id.left_product_edit);
+        mOkButton = findViewById(R.id.ok_product_edit_button);
 
         fillActivity();
-        mOkButton = findViewById(R.id.ok_product_edit_button);
-        mOkButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                SQLiteDatabase database = db.getWritableDatabase();
-                int amount = Integer.parseInt(mEditTextCurrentAmount.getText().toString());
-                if(amount == 0) db.deleteProduct(database, productId);
-                else db.updateProduct(database, productId, amount);
-                finish();
-            }
-        });
-        db.close();
+        setupOkButton();
     }
 
     private void fillActivity() {
-        System.out.println("In fill");
         SQLiteDatabase database = db.getWritableDatabase();
-        System.out.println("db after");
         String query = String.format(
                 "select PR.%s, PR.%s, AM.%s, AM.%s, PR.%s from %s as PR inner join %s as AM on PR.%s = AM.%s where PR.%s = '%s'",
                 DBProduct.NAME, DBProduct.EXPIRATION_DATE, DBProduct.CURRENT_AMOUNT, DBProduct.AMOUNT, DBProduct.PHOTO_PATH,
                 DBProduct.TABLE_PRODUCTS, DBProduct.TABLE_PRODUCTS_AMOUNT,
                 DBProduct.ID, DBProduct.ID,
-                DBProduct.ID, productId);
-        System.out.println(query);
+                DBProduct.ID, id);
         Cursor cursor = database.rawQuery(query, null);
         if(cursor != null)
             if(cursor.moveToFirst()) {
@@ -75,4 +60,45 @@ public class EditProduct extends AppCompatActivity {
             }
         cursor.close();
     }
+
+    private void setupOkButton() {
+        mOkButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase database = db.getWritableDatabase();
+                int amount = Integer.parseInt(mEditTextCurrentAmount.getText().toString());
+                if(amount == 0) db.deleteProduct(database, id);
+                else db.updateProduct(database, id, amount);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        db.close();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
+
